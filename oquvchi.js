@@ -49,7 +49,7 @@
     document.getElementById("dars-vaqt").textContent = bugungi ? "Bugungi dars · " + d.vaqt : "Keyingi dars · " + KUNLAR[d.kun] + ", " + d.vaqt;
     document.getElementById("dars-nom").textContent = m.guruh + (m.kurs ? " · " + m.kurs + (m.daraja ? " " + m.daraja : "") : "");
     document.getElementById("dars-ustoz").textContent = m.ustoz ? "Ustoz: " + m.ustoz : "";
-    if (bugungi && m.havola){ document.getElementById("dars-kirish").href = m.havola; document.getElementById("dars-acts").hidden = false; }
+    if (bugungi) document.getElementById("dars-acts").hidden = false;   // video dars saytning o'zida (dars.html)
     karta.hidden = false;
   }
 

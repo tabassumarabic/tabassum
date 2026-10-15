@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tabassum — jonli dars</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kabinet.css?v=f6a71f49">
+<style>
+html,body{height:100%}
+body{display:flex;flex-direction:column;background:#2B1D10}
+.dars-bar{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#5A3A1E;color:#fff;flex:none}
+.dars-bar .seal{width:36px;height:36px}
+.dars-bar .seal svg{width:26px;height:26px}
+.dars-bar b{font-weight:900;font-size:17px}
+.dars-bar small{display:block;color:#E2CCA3;font-weight:700;font-size:13px}
+.dars-bar .orqa{margin-left:auto;color:#fff;font-weight:800;text-decoration:underline}
+#jitsi{flex:1;min-height:0}
+#jitsi iframe{width:100%;height:100%;border:0}
+.xabar{margin:auto;text-align:center;color:#fff;padding:24px;max-width:460px}
+.xabar h2{font-weight:900;font-size:24px;margin-bottom:8px}
+.xabar p{color:#E2CCA3;font-weight:700}
+.xabar[hidden]{display:none}
+</style>
+</head>
+<body>
+<div class="dars-bar">
+  <span class="seal"><svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"><circle cx="12" cy="9" r="1.9" fill="#fff" stroke="none"/><circle cx="20" cy="9" r="1.9" fill="#fff" stroke="none"/><path d="M6 15c0 7 4.5 10 10 10s10-3 10-10"/></svg></span>
+  <div><b id="d-guruh">Jonli dars</b><small id="d-kim"></small></div>
+  <a class="orqa" id="orqa" href="kabinet.html">← Orqaga</a>
+</div>
+<div id="jitsi"></div>
+<div class="xabar" id="xabar"><h2>Dars xonasi ochilmoqda…</h2><p>Kamera va mikrofonga ruxsat so'ralsa — «Ruxsat berish» ni bosing.</p></div>
+
+<script src="sozlama.js?v=e36fc574"></script>
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var token = TB.token();
+  if (!token){ location.replace("kirish.html"); return; }
+  var g = new URLSearchParams(location.search).get("g");
+  function xato(h, p){ $("xabar").innerHTML = "<h2>" + h + "</h2><p>" + p + "</p>"; $("xabar").hidden = false; }
+
+  TB.rpc("dars_xona", { p_token: token, p_guruh: g ? +g : null }).then(function(d){
+    if (!d || d.xato){ return xato("Guruh topilmadi", "Siz hali guruhga qo'shilmagansiz. Administrator bilan bog'laning."); }
+    var orqa = d.ustoz ? "ustoz.html" : "kabinet.html";
+    $("orqa").href = orqa;
+    $("d-guruh").textContent = d.guruh + " · jonli dars";
+    $("d-kim").textContent = d.ism + (d.ustoz ? " · ustoz" : "");
+    var s = document.createElement("script");
+    s.src = "https://8x8.vc/" + d.app + "/external_api.js";
+    s.onerror = function(){ xato("Video ulanmadi", "Internetni tekshirib, sahifani yangilang."); };
+    s.onload = function(){
+      $("xabar").hidden = true;
+      var opt = {
+        roomName: d.app + "/" + d.xona,
+        parentNode: $("jitsi"),
+        userInfo: { displayName: d.ism },
+        configOverwrite: { prejoinPageEnabled: true, disableDeepLinking: true, subject: d.guruh },
+        interfaceConfigOverwrite: { SHOW_PROMOTIONAL_CLOSE_PAGE: false }
+      };
+      if (d.jwt) opt.jwt = d.jwt;
+      var api = new JitsiMeetExternalAPI("8x8.vc", opt);
+      window.__dars = api;
+      api.addListener("readyToClose", function(){ location.href = orqa; });
+    };
+    document.head.appendChild(s);
+  }).catch(function(ex){
+    if (/kirish_kerak/.test(ex && ex.message)) return location.replace("kirish.html");
+    if (/ruxsat_yoq/.test(ex && ex.message)) return xato("Ruxsat yo'q", "Bu guruh darsiga faqat o'z ustozi kira oladi.");
+    xato("Internet yo'q", "Internetni tekshirib, sahifani yangilang.");
+  });
+})();
+</script>
+</body>
+</html>

@@ -265,6 +265,7 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
           <div><label for="dv-guruh">Guruh</label><select id="dv-guruh"></select></div>
           <div><label for="dv-sana">Sana</label><input type="date" id="dv-sana"></div>
           <button class="btn sm alt" id="dv-hammasi" type="button">✅ Hammasi keldi</button>
+          <a class="btn sm" id="dv-dars" href="#">🎥 Darsni boshlash</a>
         </div>
         <div id="davomat"><p class="bosh">Yuklanmoqda…</p></div>
         <div class="dav-foot"><button class="btn" id="dv-saqla" type="button">Saqlash</button><span class="dav-sum" id="dv-sum"></span></div>
@@ -594,6 +595,7 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
         '<div class="meta"><span>👤 ' + (g.ustoz ? esc(g.ustoz) : "Ustoz biriktirilmagan") + '</span>' +
         '<span class="cnt' + (full ? " full" : "") + '">🧑‍🎓 ' + g.soni + (g.sigim ? " / " + g.sigim : "") + (full ? " · to'liq" : "") + '</span></div>' +
         '<div class="acts"><a class="btn sm" href="#oquvchilar" data-ko="' + g.id + '">O\'quvchilar</a>' +
+        '<a class="btn sm alt" href="dars.html?g=' + g.id + '">🎥 Dars</a>' +
         '<button class="btn sm alt" data-gt="' + i + '">Tahrirlash</button>' +
         (g.soni ? "" : '<button class="del" data-go="' + i + '">O\'chirish</button>') + '</div></div>';
     }).join("");
@@ -798,6 +800,11 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
     DV.belgi[u] = DV.belgi[u] === h ? null : h;     // qayta bossa — belgi olib tashlanadi
     b.parentNode.querySelectorAll("button").forEach(function(x){ x.classList.toggle("on", DV.belgi[u] === x.getAttribute("data-h")); });
     davSum();
+  });
+  $("dv-dars").addEventListener("click", function(e){
+    e.preventDefault(); var g = $("dv-guruh").value;
+    if (!g){ toast("Avval guruhni tanlang"); return; }
+    location.href = "dars.html?g=" + g;
   });
   $("dv-hammasi").addEventListener("click", function(){ DV.royxat.forEach(function(o){ DV.belgi[o.id] = "keldi"; }); chizDav(); });
   $("dv-guruh").addEventListener("change", function(){ yuklaDav().catch(xato); });
