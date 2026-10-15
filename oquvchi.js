@@ -30,6 +30,29 @@
     }).catch(function(){ el.innerHTML = '<p style="color:var(--soft);margin:0">Yuklab bo\'lmadi.</p>'; });
   }
 
+  // Kabinet: bugungi (yoki keyingi) dars kartasi va haftalik jadval — guruh jadvalidan
+  var KUNLAR = ["", "Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba", "Yakshanba"];
+  var KUN_QISQA = ["", "Du", "Se", "Chor", "Pa", "Ju", "Sha", "Yak"];
+  function jadvalim(m){
+    var j = m.jadval || [], el = document.getElementById("jadvalim"), karta = document.getElementById("dars-karta");
+    if (!el || !karta || !j.length) return;
+    el.innerHTML = j.map(function(x){
+      return '<div class="row"><div class="day">' + KUN_QISQA[x.kun] + '<small>' + esc(x.vaqt) + '</small></div><div class="g"><b>' + esc(m.guruh) + '</b><span>Jonli dars</span></div>' +
+        (x.kun === m.bugun ? '<span class="tag ok">Bugun</span>' : "") + '</div>';
+    }).join("");
+    document.getElementById("jadval-karta").hidden = false;
+    // bugungi dars (hali o'tmagan yoki boshlanganiga 2 soat bo'lmagan) yoki keyingi dars
+    var daq = function(v){ var p = v.split(":"); return +p[0] * 60 + +p[1]; }, hozir = daq(m.hozir);
+    var bugungi = j.filter(function(x){ return x.kun === m.bugun && daq(x.vaqt) + 120 > hozir; })[0], keyingi = null;
+    if (!bugungi) for (var i = 1; i <= 7 && !keyingi; i++){ var kun = (m.bugun - 1 + i) % 7 + 1; keyingi = j.filter(function(x){ return x.kun === kun; })[0] || null; }
+    var d = bugungi || keyingi;
+    document.getElementById("dars-vaqt").textContent = bugungi ? "Bugungi dars · " + d.vaqt : "Keyingi dars · " + KUNLAR[d.kun] + ", " + d.vaqt;
+    document.getElementById("dars-nom").textContent = m.guruh + (m.kurs ? " · " + m.kurs + (m.daraja ? " " + m.daraja : "") : "");
+    document.getElementById("dars-ustoz").textContent = m.ustoz ? "Ustoz: " + m.ustoz : "";
+    if (bugungi && m.havola){ document.getElementById("dars-kirish").href = m.havola; document.getElementById("dars-acts").hidden = false; }
+    karta.hidden = false;
+  }
+
   function kirishga(){ TB.chiq().then(function(){ location.replace("kirish.html"); }); }
 
   TB.rpc("men", { p_token: token }).then(function(m){
@@ -47,6 +70,7 @@
       me.querySelector("small").append(a);
     }
     tolovim(m);
+    jadvalim(m);
     var dv = document.getElementById("mening-dav");
     if (dv && m.rol === "oquvchi") TB.rpc("mening_davomatim", { p_token: token }).then(function(d){ dv.textContent = d && d.foiz != null ? d.foiz + "%" : "—"; }).catch(function(){});
     var h1 = document.querySelector(".top h1");

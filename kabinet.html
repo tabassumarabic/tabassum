@@ -8,7 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="kabinet.css?v=f6a71f49">
 <style>/* Namuna (hali tayyor bo'lmagan) qismlar yashirin — tayyor bo'lganda data-namuna olib tashlanadi */
-[data-namuna]{display:none!important}</style>
+[data-namuna]{display:none!important}
+[hidden]{display:none!important}</style>
 </head>
 <body>
 
@@ -46,19 +47,18 @@
       </div>
     </div>
 
-    <div class="card hero" data-namuna>
+    <div class="card hero" id="dars-karta" hidden>
       <svg viewBox="0 0 420 150" aria-hidden="true">
         <path d="M0 150V120Q110 60 220 105T420 80V150Z" fill="#C4905A" opacity=".55"/>
         <path d="M0 150V135Q140 95 260 128T420 112V150Z" fill="#D6A872" opacity=".5"/>
       </svg>
       <div class="t">
-        <small>Bugungi dars · 19:00</small>
-        <h2>Fonetika — 7-dars: «ي» harfi</h2>
-        <p>Ustoz: Muhammad Ibrohim Shoshiy · 60 daqiqa</p>
+        <small id="dars-vaqt"></small>
+        <h2 id="dars-nom"></h2>
+        <p id="dars-ustoz"></p>
       </div>
-      <div class="acts">
-        <button class="btn">▶ Darsga kirish</button>
-        <button class="btn alt">📄 Dars materiali</button>
+      <div class="acts" id="dars-acts" hidden>
+        <a class="btn" id="dars-kirish" target="_blank" rel="noopener">▶ Darsga kirish</a>
       </div>
     </div>
 
@@ -106,12 +106,9 @@
       </div>
 
       <div class="stack">
-        <div class="card" data-namuna>
+        <div class="card" id="jadval-karta" hidden>
           <h3>📅 Haftalik jadval</h3>
-          <div class="row"><div class="day">Du<small>19:00</small></div><div class="g"><b>Fonetika — 7-dars</b><span>Jonli dars</span></div><span class="tag ok">Bugun</span></div>
-          <div class="row"><div class="day">Chor<small>19:00</small></div><div class="g"><b>Fonetika — 8-dars</b><span>Jonli dars</span></div></div>
-          <div class="row"><div class="day">Ju<small>19:00</small></div><div class="g"><b>Fonetika — 9-dars</b><span>Jonli dars</span></div></div>
-          <div class="row"><div class="day">Yak<small>20:00</small></div><div class="g"><b>Jamoaviy o'yin</b><span>Hamma guruhlar</span></div></div>
+          <div id="jadvalim"></div>
         </div>
 
         <div class="card" data-namuna>
@@ -131,6 +128,6 @@
 </div>
 
 <script src="sozlama.js?v=e36fc574"></script>
-<script src="oquvchi.js?v=691a1a70"></script>
+<script src="oquvchi.js?v=9a50aa21"></script>
 </body>
 </html>

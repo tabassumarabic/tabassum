@@ -79,6 +79,13 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
 .done .bigpin{font-size:44px;font-weight:900;letter-spacing:.25em;background:var(--sand);border-radius:18px;padding:10px 0 10px .25em;margin:14px 0}
 .done p{color:var(--soft);margin:0 0 18px;font-weight:700}
 
+/* jadval (guruh oynasi) */
+.jadval{display:grid;gap:6px}
+.jkun{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:12px;background:#fff;border:2px solid var(--line)}
+.jkun label{margin:0;display:flex;align-items:center;gap:8px;flex:1;font-weight:800;cursor:pointer}
+.jkun input[type=checkbox]{width:20px;height:20px;accent-color:var(--brand)}
+.jkun input[type=time]{width:auto;padding:6px 10px;border-radius:10px}
+.jkun input[type=time]:disabled{opacity:.35}
 /* davomat */
 .dav-top{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:14px}
 .dav-top label{display:block;font-weight:800;font-size:13px;color:var(--soft);margin-bottom:4px}
@@ -385,6 +392,8 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
     </select>
     <label for="g-ustoz">Ustoz</label>
     <select id="g-ustoz"></select>
+    <label>Dars kunlari va vaqti</label>
+    <div class="jadval" id="g-jadval"></div>
     <div class="err" id="g-err" role="alert"></div>
     <button class="btn wide" type="submit">Saqlash</button>
   </form>
@@ -581,6 +590,7 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
       return '<div class="card grp"><h3>' + esc(g.nom) + '</h3>' +
         '<div class="meta"><span class="tarif ' + g.tarif + '">' + TARIF[g.tarif] + '</span>' +
         '<span>' + (g.kurs === "Fonetika" ? "🌙 Fonetika" : "☀️ Grammatika · " + esc(g.daraja)) + '</span></div>' +
+        '<div class="meta"><span>📅 ' + jadvalMatn(g.jadval) + '</span></div>' +
         '<div class="meta"><span>👤 ' + (g.ustoz ? esc(g.ustoz) : "Ustoz biriktirilmagan") + '</span>' +
         '<span class="cnt' + (full ? " full" : "") + '">🧑‍🎓 ' + g.soni + (g.sigim ? " / " + g.sigim : "") + (full ? " · to'liq" : "") + '</span></div>' +
         '<div class="acts"><a class="btn sm" href="#oquvchilar" data-ko="' + g.id + '">O\'quvchilar</a>' +
@@ -621,7 +631,27 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
       return '<option value="' + u.id + '">' + esc(u.ism) + ' (' + ROLLAR[u.rol].nom + ')</option>';
     }).join("");
     $("g-ustoz").value = g && g.ustoz_id ? g.ustoz_id : (D.ustozlar[0] ? D.ustozlar[0].id : "");
+    jadvalChiz(g ? g.jadval : []);
     $("g-err").textContent = ""; darajaKorinish(); $("g-dlg").showModal();
+  }
+  var KUNLAR = ["", "Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba", "Yakshanba"];
+  var KUN_QISQA = ["", "Du", "Se", "Chor", "Pa", "Ju", "Sha", "Yak"];
+  function jadvalMatn(j){ return j && j.length ? j.map(function(x){ return KUN_QISQA[x.kun] + " " + x.vaqt; }).join(" · ") : "Jadval kiritilmagan"; }
+  function jadvalChiz(j){
+    var bor = {}; (j || []).forEach(function(x){ bor[x.kun] = x.vaqt; });
+    $("g-jadval").innerHTML = [1, 2, 3, 4, 5, 6, 7].map(function(k){
+      return '<div class="jkun"><label><input type="checkbox" data-kun="' + k + '"' + (bor[k] ? " checked" : "") + '> ' + KUNLAR[k] + '</label>' +
+        '<input type="time" data-vaqt="' + k + '" value="' + (bor[k] || "19:00") + '"' + (bor[k] ? "" : " disabled") + '></div>';
+    }).join("");
+  }
+  $("g-jadval").addEventListener("change", function(e){
+    var k = e.target.getAttribute("data-kun");
+    if (k) document.querySelector('#g-jadval [data-vaqt="' + k + '"]').disabled = !e.target.checked;
+  });
+  function jadvalOl(){
+    return [].slice.call(document.querySelectorAll("#g-jadval [data-kun]")).filter(function(c){ return c.checked; }).map(function(c){
+      var k = +c.getAttribute("data-kun"); return { kun: k, vaqt: document.querySelector('#g-jadval [data-vaqt="' + k + '"]').value || "19:00" };
+    });
   }
   function darajaKorinish(){ $("g-daraja-box").style.visibility = $("g-kurs").value === "Grammatika" ? "visible" : "hidden"; }
   $("g-kurs").addEventListener("change", darajaKorinish);
@@ -631,7 +661,8 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
     var nom = $("g-nom").value.trim();
     if (!nom){ $("g-err").textContent = "Guruh nomini yozing"; $("g-nom").focus(); return; }
     rpc("guruh_saqla", { p_id: gTahrir ? gTahrir.id : null, p_nom: nom, p_kurs: $("g-kurs").value, p_daraja: $("g-daraja").value,
-                         p_tarif: $("g-tarif").value, p_ustoz_id: $("g-ustoz").value ? +$("g-ustoz").value : null }).then(function(d){
+                         p_tarif: $("g-tarif").value, p_ustoz_id: $("g-ustoz").value ? +$("g-ustoz").value : null,
+                         p_jadval: jadvalOl() }).then(function(d){
       if (d && d.xato === "sigim"){ $("g-err").textContent = "Bu tarifga sig'maydi: guruhda " + d.soni + " o'quvchi bor"; return; }
       if (d && d.xato){ $("g-err").textContent = "Ma'lumotlarni tekshiring"; return; }
       $("g-dlg").close(); toast(gTahrir ? "Guruh saqlandi" : "Guruh ochildi"); return yuklaGuruhlar();
