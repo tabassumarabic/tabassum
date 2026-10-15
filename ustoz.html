@@ -186,6 +186,7 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
       <a href="#oquvchilar" data-b="oquvchilar"><i>🧑‍🎓</i><span>O'quvchilar</span></a>
       <a href="#xodimlar" data-b="xodimlar"><i>🧑‍💼</i><span>Xodimlar</span></a>
       <a href="#tolovlar" data-b="tolovlar"><i>💳</i><span>To'lovlar</span></a>
+      <a href="#platforma" data-b="platforma"><i>📱</i><span>Platforma</span></a>
       <a href="#davomat" data-b="davomat"><i>✅</i><span>Davomat</span></a>
       <a href="#" class="soon"><i>📝</i><span>Vazifalar</span></a>
     </div>
@@ -285,6 +286,20 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
         <div class="head"><h3>💳 O'quvchilar</h3>
           <div class="sp seg" id="t-filtr"><button class="on" data-f="">Hammasi</button><button data-f="qarz">Qarzdorlar</button><button data-f="tolangan">To'laganlar</button></div></div>
         <div id="tolovlar"><p class="bosh">Yuklanmoqda…</p></div>
+      </div>
+    </section>
+
+    <!-- PLATFORMA -->
+    <section data-s="platforma" hidden>
+      <div class="top"><div><h1>Platforma</h1><p>tabassumarabic.github.io/app — ro'yxatdan o'tganlar</p></div></div>
+      <div class="stats s3">
+        <div class="card stat"><i>👥</i><div><b id="pl-jami">–</b><span>Jami</span></div></div>
+        <div class="card stat"><i>🆕</i><div><b id="pl-bugun">–</b><span>Bugun</span></div></div>
+        <div class="card stat"><i>📅</i><div><b id="pl-hafta">–</b><span>Oxirgi 7 kun</span></div></div>
+      </div>
+      <div class="card">
+        <div class="head"><h3>📱 Foydalanuvchilar</h3><div class="sp"><button class="btn sm alt" id="pl-yangila">↻ Yangilash</button></div></div>
+        <div id="platforma"><p class="bosh">Yuklanmoqda…</p></div>
       </div>
     </section>
 
@@ -447,8 +462,8 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
   };
   var TARIF = { standart: "Standart", pro: "Pro", premium: "Premium" };
   var HOLATLAR = { yangi: "🆕 Yangi", boglanildi: "📞 Bog'lanildi", yozildi: "✅ Yozildi", rad: "✖ Rad etildi" };
-  var BOLIMLAR = { direktor: ["bosh", "arizalar", "guruhlar", "oquvchilar", "davomat", "tolovlar", "xodimlar"],
-                   administrator: ["bosh", "arizalar", "guruhlar", "oquvchilar", "davomat", "tolovlar"],
+  var BOLIMLAR = { direktor: ["bosh", "arizalar", "guruhlar", "oquvchilar", "davomat", "tolovlar", "platforma", "xodimlar"],
+                   administrator: ["bosh", "arizalar", "guruhlar", "oquvchilar", "davomat", "tolovlar", "platforma"],
                    hisobchi: ["tolovlar"], ustoz: ["davomat"], yordamchi: ["davomat"] };
 
   var token = TB.token(), men = null, ruxsat = [];
@@ -822,6 +837,27 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
     }).catch(xato);
   });
 
+  // ---------- platforma foydalanuvchilari ----------
+  function yuklaPlatforma(){
+    if (ruxsat.indexOf("platforma") < 0) return Promise.resolve();
+    return rpc("p_foydalanuvchilar").then(function(d){
+      $("pl-jami").textContent = d.jami; $("pl-bugun").textContent = d.bugun; $("pl-hafta").textContent = d.hafta;
+      $("platforma").innerHTML = d.royxat.length ? d.royxat.map(function(u){
+        var av = u.rasm ? '<img src="' + esc(u.rasm) + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">' : esc(u.avatar);
+        return '<div class="row"><span class="ava" style="overflow:hidden">' + av + '</span>' +
+          '<div class="g"><b>' + esc(u.ism) + (u.markaz ? ' <span class="chip toxt">🎓 markaz</span>' : "") + '</b>' +
+          '<span>' + (u.tel ? esc(u.tel) : "") + (u.yil ? " · " + u.yil + "-yil" : "") + " · " + esc(u.sana) + " · ⭐ " + u.xp + '</span></div>' +
+          (u.rasm ? '<button class="del" data-pr="' + u.id + '">Rasmni o\'chirish</button>' : "") + '</div>';
+      }).join("") : '<p class="bosh">Hali hech kim ro\'yxatdan o\'tmagan.</p>';
+    });
+  }
+  $("pl-yangila").addEventListener("click", function(){ yuklaPlatforma().catch(xato); });
+  $("platforma").addEventListener("click", function(e){
+    var id = e.target.getAttribute("data-pr"); if (!id) return;
+    if (!confirm("Bu foydalanuvchining rasmi o'chirilsinmi? (nomaqbul rasm bo'lsa)")) return;
+    rpc("p_rasm_ochir_admin", { p_id: +id }).then(function(){ toast("Rasm o'chirildi"); return yuklaPlatforma(); }).catch(xato);
+  });
+
   // ---------- to'lovlar ----------
   var OYLAR = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
   function som(n){ return String(Math.round(n || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " so'm"; }
@@ -985,6 +1021,7 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
     if (ruxsat.indexOf("oquvchilar") >= 0){ $("panel-top").hidden = false; ishlar.push(yuklaArizalar(), yuklaGuruhlar(), yuklaOquvchilar(), yuklaStat()); }
     if (ruxsat.indexOf("tolovlar") >= 0) ishlar.push(yuklaTolov());
     if (ruxsat.indexOf("davomat") >= 0) ishlar.push(yuklaDavGuruh());
+    if (ruxsat.indexOf("platforma") >= 0) ishlar.push(yuklaPlatforma());
     if (m.rol === "direktor") ishlar.push(yuklaXodimlar());
     else if (ruxsat.indexOf("guruhlar") >= 0) ishlar.push(rpc("ustozlar").then(function(d){ D.ustozlar = d || []; }));
     return Promise.all(ishlar);
