@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tabassum — kabinetga kirish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kabinet.css?v=f6a71f49">
+<style>
+body{min-height:100vh;display:grid;place-items:center;padding:20px 16px 150px;position:relative;overflow-x:hidden}
+.dunes{position:fixed;left:0;right:0;bottom:0;width:100%;height:170px;z-index:0}
+.login{position:relative;z-index:1;width:min(420px,100%);padding:30px 26px;text-align:center}
+.login .seal{width:64px;height:64px;margin:0 auto}
+.login .seal svg{width:46px;height:46px}
+.login h1{font-size:26px;font-weight:900;margin-top:14px}
+.login .hint{color:var(--soft);margin:6px 0 20px}
+.login label{display:block;text-align:left;font-weight:800;margin:14px 0 6px}
+.login input{width:100%;padding:14px 16px;border-radius:14px;border:2px solid var(--line);background:#fff;font:inherit;font-weight:800;color:var(--ink);outline:0}
+.login input:focus{border-color:var(--brand)}
+#pin{text-align:center;font-size:28px;letter-spacing:.6em;padding-left:calc(16px + .6em)}
+.err{color:#B3261E;font-weight:800;font-size:14px;min-height:20px;margin-top:10px}
+.login .btn{width:100%;margin-top:4px}
+.login .foot{margin-top:18px;color:var(--soft);font-size:14px;font-weight:700}
+.login .foot a{color:var(--brand-d);text-decoration:underline}
+</style>
+</head>
+<body>
+
+<form class="card login" id="kirish" novalidate>
+  <div class="seal"><svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"><circle cx="12" cy="9" r="1.9" fill="#fff" stroke="none"/><circle cx="20" cy="9" r="1.9" fill="#fff" stroke="none"/><path d="M6 15c0 7 4.5 10 10 10s10-3 10-10"/></svg></div>
+  <h1>Kabinetga kirish</h1>
+  <p class="hint">Bu yerga faqat tabassum bilan kiriladi 😊</p>
+
+  <label for="login">Login</label>
+  <input type="text" id="login" autocomplete="username" autocapitalize="off" spellcheck="false" maxlength="40" placeholder="Tabassum_arabic">
+
+  <label for="pin">Parol (4 ta raqam)</label>
+  <input type="password" id="pin" inputmode="numeric" autocomplete="current-password" maxlength="4" placeholder="••••">
+
+  <div class="err" id="err" role="alert"></div>
+  <button class="btn" type="submit">Kirish</button>
+
+  <p class="foot">Parolni unutdingizmi? Ustozingizdan so'rang.<br><a href="index.html">← Bosh sahifaga qaytish</a></p>
+</form>
+
+<svg class="dunes" viewBox="0 0 1200 170" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0 80Q200 10 420 70T820 50T1200 75V170H0Z" fill="#DFC495"/>
+  <path d="M0 120Q260 50 520 110T1000 90T1200 110V170H0Z" fill="#CFAE78"/>
+</svg>
+
+<script src="sozlama.js?v=e36fc574"></script>
+<script>
+(function(){
+  var form = document.getElementById("kirish"), login = document.getElementById("login"),
+      pin = document.getElementById("pin"), err = document.getElementById("err");
+  var LOGIN = "tabassum_arabic";
+
+  pin.addEventListener("input", function(){ pin.value = pin.value.replace(/\D/g, "").slice(0, 4); });
+
+  var btn = form.querySelector("button[type=submit]");
+
+  function qoldi(n){ return n > 0 ? " Yana " + n + " marta urinishingiz mumkin." : " Keyingi xatodan keyin 15 daqiqaga bloklanadi."; }
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var l = login.value.trim().toLowerCase();
+    if (l !== LOGIN){ err.textContent = "Login noto'g'ri"; login.focus(); return; }
+    if (!/^\d{4}$/.test(pin.value)){ err.textContent = "Parol 4 ta raqamdan iborat"; pin.focus(); return; }
+    err.textContent = ""; btn.disabled = true; btn.textContent = "Tekshirilmoqda…";
+    TB.rpc("login", { p_login: l, p_pin: pin.value }).then(function(d){
+      if (d.token){
+        TB.saqla(d);
+        location.href = TB.xodim(d.rol) ? "ustoz.html" : "kabinet.html";
+        return;
+      }
+      if (d.xato === "blok") err.textContent = "Ko'p marta xato yozildi. 15 daqiqadan keyin qayta urinib ko'ring.";
+      else if (d.xato === "login") err.textContent = "Login noto'g'ri." + qoldi(d.qoldi);
+      else err.textContent = "Parol noto'g'ri." + qoldi(d.qoldi);
+      pin.value = ""; pin.focus();
+    }).catch(function(){
+      err.textContent = "Internet bilan bog'lanib bo'lmadi. Qayta urinib ko'ring.";
+    }).then(function(){ btn.disabled = false; btn.textContent = "Kirish"; });
+  });
+})();
+</script>
+</body>
+</html>

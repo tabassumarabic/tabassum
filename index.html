@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tabassum — arab tili online markazi</title>
+<meta name="description" content="Tabassum — arab tilini noldan o'rgatadigan online markaz. Fonetika va grammatika kurslari.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBF4E6; --card:#FFFDF8; --ink:#3A2716; --soft:#7A6450; --line:#EADBC2;
+  --brand:#C8553D; --brand-d:#9E3F2B; --teal:#2A9D8F; --gold:#E09A2B; --night:#2B2145;
+  --r:22px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,"Segoe UI",sans-serif;font-weight:500;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+h1,h2,h3{margin:0;font-weight:900;line-height:1.15}
+h2{font-size:clamp(26px,4.5vw,36px);text-align:center}
+.sub{color:var(--soft);text-align:center;max-width:560px;margin:10px auto 0}
+section{padding:64px 0}
+
+/* tugma */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px 26px;border-radius:16px;font-weight:900;font-size:17px;background:var(--brand);color:#fff;box-shadow:0 5px 0 var(--brand-d);transition:transform .08s,box-shadow .08s;border:0;cursor:pointer;font-family:inherit}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--brand-d)}
+.btn.ghost{background:var(--card);color:var(--ink);box-shadow:0 5px 0 var(--line)}
+.btn.sm{padding:10px 18px;font-size:15px;border-radius:13px;box-shadow:0 4px 0 var(--brand-d)}
+
+/* yuqori qator */
+header{position:sticky;top:0;z-index:10;background:rgba(251,244,230,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:18px;height:66px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:22px}
+.seal{width:42px;height:42px;border-radius:50%;background:var(--brand);display:grid;place-items:center;flex:none}
+.seal svg{width:30px;height:30px}
+nav{margin-left:auto;display:flex;gap:22px;font-weight:800;color:var(--soft)}
+nav a:hover{color:var(--ink)}
+.enter{font-weight:900;color:var(--brand-d);padding:8px 16px;border:2px solid var(--brand);border-radius:13px;white-space:nowrap}
+.enter:hover{background:#FBE3DA}
+@media(max-width:760px){nav{display:none}.bar .enter{margin-left:auto}}
+
+/* bosh qism */
+.hero{padding:56px 0 0;text-align:center;overflow:hidden}
+.chip{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:99px;padding:7px 16px;font-weight:800;font-size:14px;color:var(--soft)}
+.hero h1{font-size:clamp(34px,7vw,60px);margin:18px auto 0;max-width:780px}
+.hero h1 em{font-style:normal;color:var(--brand)}
+.hero p{font-size:clamp(17px,2.4vw,20px);color:var(--soft);max-width:560px;margin:16px auto 0}
+.cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+.scene{display:block;width:100%;height:auto;margin-top:36px}
+
+/* kurslar */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:36px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.course{border-radius:var(--r);padding:28px;color:#fff;position:relative;overflow:hidden;box-shadow:0 6px 0 rgba(0,0,0,.18)}
+.course.fon{background:linear-gradient(160deg,#3A2D63,var(--night))}
+.course.gram{background:linear-gradient(160deg,#F0B24A,#D9772B)}
+.course .ic{font-size:44px;line-height:1}
+.course h3{font-size:28px;margin-top:12px}
+.course p{margin:8px 0 0;opacity:.92}
+.course ul{margin:16px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-weight:700}
+.course li::before{content:"✓ ";font-weight:900}
+.course .tag{display:inline-block;margin-top:18px;background:rgba(255,255,255,.2);border-radius:99px;padding:6px 14px;font-weight:800;font-size:14px}
+.course .ar{position:absolute;right:18px;top:8px;font-family:Amiri,serif;font-size:96px;opacity:.16;line-height:1}
+
+/* qanday o'qiymiz */
+.alt{background:#F4E7CE}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:36px}
+@media(max-width:860px){.grid4{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.grid4{grid-template-columns:1fr}}
+.step{background:var(--card);border-radius:var(--r);padding:22px;box-shadow:0 5px 0 var(--line)}
+.step .n{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:24px;background:#FCEBD3}
+.step h3{font-size:19px;margin-top:14px}
+.step p{margin:6px 0 0;color:var(--soft);font-size:15px}
+
+/* ustoz */
+.teacher{display:grid;grid-template-columns:200px 1fr;gap:30px;align-items:center;background:var(--card);border-radius:var(--r);padding:30px;box-shadow:0 5px 0 var(--line);margin-top:36px}
+@media(max-width:640px){.teacher{grid-template-columns:1fr;text-align:center}.photo{margin:0 auto}}
+.photo{width:200px;height:200px;border-radius:50%;background:#F4E7CE;border:4px dashed var(--line);display:grid;place-items:center;color:var(--soft);font-weight:800;font-size:14px;text-align:center}
+.photo{position:relative;overflow:hidden}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.photo:has(img){border-style:solid;border-color:var(--card);box-shadow:0 0 0 4px var(--line)}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.facts span{background:#F4E7CE;border-radius:99px;padding:7px 14px;font-weight:800;font-size:14px}
+@media(max-width:640px){.facts{justify-content:center}}
+.teacher h3{font-size:26px}
+.teacher .role{color:var(--brand);font-weight:800}
+.teacher p{color:var(--soft);margin:10px 0 0}
+
+/* narx */
+.price{background:var(--card);border-radius:var(--r);padding:28px;box-shadow:0 5px 0 var(--line);text-align:center}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:36px;align-items:start}
+@media(max-width:860px){.grid3{grid-template-columns:1fr}}
+.price{position:relative}
+.price.best{outline:3px solid var(--brand);box-shadow:0 5px 0 var(--brand-d)}
+.rec{position:absolute;left:50%;top:-14px;transform:translateX(-50%);background:var(--brand);color:#fff;font-weight:900;font-size:13px;padding:5px 14px;border-radius:99px;white-space:nowrap}
+.price ul{text-align:left}
+.price li{padding-left:24px;position:relative}
+.price li::before{content:"✓";position:absolute;left:0;color:var(--brand);font-weight:900}
+.price .btn{width:100%}
+.price h3{font-size:22px}
+.price .sum{font-size:34px;font-weight:900;margin:10px 0 2px}
+.price .sum small{font-size:16px;color:var(--soft);font-weight:700}
+.price ul{margin:16px 0 22px;padding:0;list-style:none;display:grid;gap:8px;color:var(--soft);font-weight:700}
+.todo{background:#FFF3C4;border-radius:6px;padding:0 6px}
+
+/* savollar */
+.faq{max-width:720px;margin:36px auto 0;display:grid;gap:12px}
+details{background:var(--card);border-radius:16px;padding:16px 20px;box-shadow:0 4px 0 var(--line)}
+summary{font-weight:800;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::after{content:"+";font-weight:900;color:var(--brand);font-size:22px;line-height:1}
+details[open] summary::after{content:"–"}
+details p{margin:10px 0 0;color:var(--soft)}
+
+/* yozilish */
+.join{background:var(--brand);color:#fff;border-radius:28px;padding:44px 24px;text-align:center}
+.join h2{color:#fff}
+.join p{opacity:.92;max-width:480px;margin:10px auto 24px}
+.join .btn{background:#fff;color:var(--brand-d);box-shadow:0 5px 0 rgba(0,0,0,.22)}
+
+/* ariza oynasi */
+dialog{border:0;padding:0;border-radius:26px;background:var(--card);color:var(--ink);width:min(440px,calc(100vw - 28px));box-shadow:0 20px 60px rgba(58,39,22,.35)}
+dialog::backdrop{background:rgba(58,39,22,.55)}
+.form{padding:26px;position:relative}
+.form h3{font-size:24px}
+.form .hint{color:var(--soft);margin:6px 0 18px}
+.x{position:absolute;right:14px;top:14px;width:38px;height:38px;border-radius:50%;border:0;background:#F4E7CE;font-size:18px;font-weight:900;color:var(--ink);cursor:pointer;font-family:inherit}
+.form label{display:block;font-weight:800;margin:14px 0 6px}
+.form label small{color:var(--soft);font-weight:700}
+.form input[type=text],.form input[type=tel]{width:100%;padding:14px 16px;border-radius:14px;border:2px solid var(--line);background:#fff;font:inherit;font-weight:700;color:var(--ink);outline:0}
+.form input:focus{border-color:var(--brand)}
+.pickc{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.pickc label{margin:0;position:relative}
+.pickc input{position:absolute;opacity:0;inset:0}
+.pickc span{display:block;text-align:center;padding:12px 4px;border-radius:14px;border:2px solid var(--line);background:#fff;font-weight:800;font-size:14px;cursor:pointer}
+.pickc input:checked+span{border-color:var(--brand);background:#FBE3DA;color:var(--brand-d)}
+.pickc input:focus-visible+span{outline:2px solid var(--brand);outline-offset:2px}
+.err{color:#B3261E;font-weight:800;font-size:14px;min-height:20px;margin-top:10px}
+.form .btn{width:100%}
+.video-btn .tez{font-weight:800;opacity:.6;font-size:13px}
+.tg{display:block;text-align:center;margin-top:16px;font-weight:800;color:var(--brand-d);text-decoration:underline}
+.join .tg{color:#fff}
+.tg[hidden]{display:none}
+.done{text-align:center;padding:40px 26px}
+.done .big{font-size:56px;line-height:1}
+.done h3{font-size:24px;margin-top:10px}
+.done p{color:var(--soft);margin:8px 0 22px}
+
+footer{padding:30px 0 40px;text-align:center;color:var(--soft);font-size:14px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="#">
+      <span class="seal" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"><circle cx="12" cy="9" r="1.9" fill="#fff" stroke="none"/><circle cx="20" cy="9" r="1.9" fill="#fff" stroke="none"/><path d="M6 15c0 7 4.5 10 10 10s10-3 10-10"/></svg>
+      </span>
+      Tabassum
+    </a>
+    <nav>
+      <a href="#kurslar">Kurslar</a>
+      <a href="#qanday">Qanday o'qiymiz</a>
+      <a href="#ustoz">Ustoz</a>
+      <a href="#narx">Narx</a>
+      <a href="#savollar">Savollar</a>
+    </nav>
+    <a class="enter" href="kirish.html">👤 Kirish</a>
+    <a class="btn sm" href="#yozilish">Yozilish</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="chip">😊 Bu yerga faqat tabassum bilan kiriladi</span>
+    <h1>Arab tilini <em>tabassum</em> bilan o'rganing</h1>
+    <p>Online markaz: harflardan boshlab erkin o'qish va gaplashishgacha. Jonli darslar, har kungi qisqa mashqlar va o'yinlar.</p>
+    <div class="cta">
+      <a class="btn" href="#yozilish">Kursga yozilish</a>
+      <a class="btn ghost video-btn" href="#video" data-video>▶ Bepul video dars <small class="tez">· tez orada</small></a>
+    </div>
+  </div>
+  <svg class="scene" viewBox="0 0 1200 260" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <circle cx="930" cy="92" r="52" fill="#F4B740"/>
+    <path d="M0 190 Q200 110 420 180 T820 160 T1200 185 V260 H0Z" fill="#EFCF9A"/>
+    <path d="M0 220 Q260 150 520 215 T1000 195 T1200 215 V260 H0Z" fill="#E3B877"/>
+    <g fill="#8A5A33">
+      <g transform="translate(250 168)"><path d="M0 22c0-9 5-14 12-14 3-7 9-7 12 0 6 0 9 4 10 9l6-12 4 1-3 15c-1 4-3 6-6 7v12h-3V28h-17v12h-3V27c-5-1-9-2-12-5z"/></g>
+      <g transform="translate(330 176) scale(.85)"><path d="M0 22c0-9 5-14 12-14 3-7 9-7 12 0 6 0 9 4 10 9l6-12 4 1-3 15c-1 4-3 6-6 7v12h-3V28h-17v12h-3V27c-5-1-9-2-12-5z"/></g>
+      <g transform="translate(398 183) scale(.7)"><path d="M0 22c0-9 5-14 12-14 3-7 9-7 12 0 6 0 9 4 10 9l6-12 4 1-3 15c-1 4-3 6-6 7v12h-3V28h-17v12h-3V27c-5-1-9-2-12-5z"/></g>
+    </g>
+    <g transform="translate(1050 150)" stroke="#5B8C3A" stroke-width="7" stroke-linecap="round" fill="none">
+      <path d="M0 70V10" stroke="#8A5A33"/>
+      <path d="M0 10q-22-14-40 2M0 10q22-14 40 2M0 10q-12-24-30-24M0 10q12-24 30-24"/>
+    </g>
+  </svg>
+</section>
+
+<section id="kurslar">
+  <div class="wrap">
+    <h2>Ikkita kurs</h2>
+    <p class="sub">Oldin o'qishni o'rganamiz, keyin tilni. Qaysi biridan boshlashni siz bilan birga aniqlaymiz.</p>
+    <div class="grid2">
+      <div class="course fon">
+        <span class="ar">ا ب ت</span>
+        <div class="ic">🌙</div>
+        <h3>Fonetika</h3>
+        <p>Arab harflarini to'g'ri talaffuz qilish va o'qishni o'rganish.</p>
+        <ul>
+          <li>28 ta harf va ularning maxrajlari</li>
+          <li>Harakatlar, mad, tashdid, tanvin</li>
+          <li>Ravon o'qish va husnixat</li>
+        </ul>
+        <span class="tag">Noldan boshlovchilar uchun</span>
+      </div>
+      <div class="course gram">
+        <span class="ar">نحو</span>
+        <div class="ic">☀️</div>
+        <h3>Grammatika</h3>
+        <p>So'z boyligi, gap tuzish va jonli suhbat — darajama-daraja.</p>
+        <ul>
+          <li>Xalqaro darajalar bo'yicha (A0 dan boshlab)</li>
+          <li>Tinglash, gapirish, o'qish, yozish</li>
+          <li>Imtihondan o'tganlarga sertifikat</li>
+        </ul>
+        <span class="tag">O'qishni biladiganlar uchun</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="qanday" class="alt">
+  <div class="wrap">
+    <h2>Qanday o'qiymiz</h2>
+    <p class="sub">Dars faqat video emas — har kuni ozgina, lekin to'xtamasdan.</p>
+    <div class="grid4">
+      <div class="step"><div class="n">🎥</div><h3>Jonli darslar</h3><p>Ustoz bilan online, kichik guruhda. Savol berish mumkin.</p></div>
+      <div class="step"><div class="n">📱</div><h3>Har kungi mashq</h3><p>Telefonda 10–15 daqiqalik qisqa topshiriqlar.</p></div>
+      <div class="step"><div class="n">🐪</div><h3>O'yin va musobaqa</h3><p>Jamoaviy o'yinlar va reyting — zerikmaslik uchun.</p></div>
+      <div class="step"><div class="n">🎓</div><h3>Sertifikat</h3><p>Imtihondan o'tganlarga markaz sertifikati beriladi.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="ustoz">
+  <div class="wrap">
+    <h2>Ustoz</h2>
+    <div class="teacher">
+      <!-- Rasm: «sayt» papkasiga ustoz.jpg qo'yilsa, o'zi shu yerda chiqadi -->
+      <div class="photo"><img src="ustoz.jpg" alt="Muhammad Ibrohim Shoshiy" onerror="this.remove()">Rasm<br>shu yerda</div>
+      <div>
+        <h3>Muhammad Ibrohim Shoshiy</h3>
+        <div class="role">Arab tili ustozi, markaz asoschisi</div>
+        <p>Misrdagi al-Azhar universitetida 5 yil ta'lim olgan. Bundan tashqari Nil va Shayx Zayd markazlarini a'lo baholarga tamomlagan. 2 yildan beri arab tilidan dars beradi.</p>
+        <div class="facts">
+          <span>🎓 Al-Azhar · 5 yil</span>
+          <span>⭐ Nil va Shayx Zayd · a'lo</span>
+          <span>👨‍🏫 2 yil tajriba</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="narx" class="alt">
+  <div class="wrap">
+    <h2>Narx</h2>
+    <p class="sub">Darsimiz qanday o'tishini <a href="#video" data-video>bepul video darsda</a> ko'ring.</p>
+    <div class="grid3">
+      <div class="price">
+        <h3>Standart</h3>
+        <div class="sum">399 000 <small>so'm / oy</small></div>
+        <ul>
+          <li>Video darsliklar</li>
+          <li>Haftada 1 marta yordamchi ustozga topshirish</li>
+          <li>O'zingizga qulay vaqtda</li>
+        </ul>
+        <a class="btn ghost" href="#yozilish">Yozilish</a>
+      </div>
+      <div class="price best">
+        <h3>Pro</h3>
+        <div class="sum">499 000 <small>so'm / oy</small></div>
+        <ul>
+          <li>Haftada 3 ta jonli dars, 1,5 soatdan</li>
+          <li>3 kun yordamchi ustoz bilan qaytariq</li>
+          <li>Video darsliklar</li>
+          <li>Har kungi vazifalar</li>
+          <li>Guruhda ko'pi bilan 10 kishi</li>
+        </ul>
+        <a class="btn" href="#yozilish">Yozilish</a>
+      </div>
+      <div class="price">
+        <h3>Premium</h3>
+        <div class="sum">1 499 000 <small>so'm / oy</small></div>
+        <ul>
+          <li>Yakka yoki 2 kishilik jonli dars, haftada 3 marta</li>
+          <li>3 kun yordamchi ustoz bilan yakka qaytariq</li>
+          <li>Video darsliklar</li>
+          <li>Har kungi vazifalar</li>
+        </ul>
+        <a class="btn ghost" href="#yozilish">Yozilish</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="savollar">
+  <div class="wrap">
+    <h2>Ko'p beriladigan savollar</h2>
+    <div class="faq">
+      <details><summary>Arabchani umuman bilmayman. Uddalay olamanmi?</summary><p>Ha. Fonetika kursi aynan noldan — birinchi harfdan boshlanadi.</p></details>
+      <details><summary>Darslar qayerda o'tadi?</summary><p>To'liq online. Telefon yoki kompyuter va internet bo'lsa yetarli.</p></details>
+      <details><summary>Darsni o'tkazib yuborsam-chi?</summary><p>Xavotir olmang. Darsning video yozuvi beriladi, yordamchi ustoz esa o'tkazib yuborilgan mavzuni yetkazib olishingizga yordam beradi.</p></details>
+      <details><summary>Darsni oldindan ko'rsa bo'ladimi?</summary><p>Ha, <a href="#video" data-video>bepul video darsimizni</a> ko'ring.</p></details>
+    </div>
+  </div>
+</section>
+
+<section id="yozilish" style="padding-top:0">
+  <div class="wrap">
+    <div class="join">
+      <h2>Kursga yoziling</h2>
+      <p>Ariza qoldiring — o'zimiz bog'lanamiz, darajangizni aniqlab, mos guruhga qo'shamiz.</p>
+      <a class="btn" href="#ariza">Ariza qoldirish</a>
+      <a class="tg" data-tg hidden target="_blank" rel="noopener">yoki Telegramdan yozing →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© 2026 Tabassum — arab tili online markazi</div>
+</footer>
+
+<dialog id="ariza">
+  <form class="form" id="ariza-form" novalidate>
+    <button type="button" class="x" id="ariza-x" aria-label="Yopish">✕</button>
+    <h3>Kursga yozilish</h3>
+    <p class="hint">O'zimiz siz bilan bog'lanamiz.</p>
+
+    <label for="f-ism">Ismingiz</label>
+    <input type="text" id="f-ism" name="ism" autocomplete="name" maxlength="60" placeholder="Masalan: Aziza">
+
+    <label for="f-tel">Telefon raqamingiz</label>
+    <input type="tel" id="f-tel" name="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="+998 90 123 45 67">
+
+    <label for="f-tg">Telegram username <small>(bo'lsa)</small></label>
+    <input type="text" id="f-tg" name="tg" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="33" placeholder="@username">
+
+    <label>Qaysi kurs?</label>
+    <div class="pickc">
+      <label><input type="radio" name="kurs" value="Fonetika"><span>🌙 Fonetika</span></label>
+      <label><input type="radio" name="kurs" value="Grammatika"><span>☀️ Grammatika</span></label>
+      <label><input type="radio" name="kurs" value="Bilmayman" checked><span>🤔 Bilmayman</span></label>
+    </div>
+
+    <div class="err" id="ariza-err" role="alert"></div>
+    <button class="btn" type="submit">Yuborish</button>
+    <a class="tg" data-tg hidden target="_blank" rel="noopener">yoki Telegramdan yozing →</a>
+  </form>
+  <div class="done" id="ariza-done" hidden>
+    <div class="big">😊</div>
+    <h3>Rahmat!</h3>
+    <p>Arizangiz qabul qilindi. Tez orada siz bilan bog'lanamiz.</p>
+    <button class="btn" type="button" id="ariza-ok">Yaxshi</button>
+  </div>
+</dialog>
+
+<script src="sozlama.js?v=e36fc574"></script>
+<script>
+(function(){
+  var dlg = document.getElementById("ariza"), form = document.getElementById("ariza-form"),
+      done = document.getElementById("ariza-done"), err = document.getElementById("ariza-err");
+
+  function open(){
+    form.hidden = false; done.hidden = true; err.textContent = "";
+    if (!dlg.open) dlg.showModal();
+  }
+  function close(){ if (dlg.open) dlg.close(); }
+
+  // «Yozilish» tugmalarining hammasi shu oynani ochadi
+  document.querySelectorAll('a[href="#yozilish"], a[href="#ariza"]').forEach(function(a){
+    a.addEventListener("click", function(e){ e.preventDefault(); open(); });
+  });
+  document.getElementById("ariza-x").addEventListener("click", close);
+  document.getElementById("ariza-ok").addEventListener("click", close);
+  dlg.addEventListener("click", function(e){ if (e.target === dlg) close(); });
+
+  // Arizani omborga yuborish
+  var XATOLAR = { ism: "Ismingizni to'g'ri yozing", tel: "Telefon raqamni to'liq yozing",
+                  tg: "Telegram username noto'g'ri", kop: "Juda ko'p ariza yuborildi. Birozdan keyin urinib ko'ring." };
+  function send(a){
+    return TB.rpc("ariza", { p_ism: a.ism, p_tel: a.tel, p_tg: a.tg, p_kurs: a.kurs }).then(function(d){
+      if (d && d.xato) throw new Error(XATOLAR[d.xato] || "Yuborilmadi");
+    });
+  }
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var ism = form.ism.value.trim(), tel = form.tel.value.trim(), raqam = tel.replace(/\D/g, "");
+    if (ism.length < 2){ err.textContent = "Ismingizni yozing"; form.ism.focus(); return; }
+    if (raqam.length < 9 || raqam.length > 12){ err.textContent = "Telefon raqamni to'liq yozing"; form.tel.focus(); return; }
+    var tg = form.tg.value.trim().replace(/^(https?:\/\/)?t\.me\//i, "").replace(/^@/, "");
+    if (tg && !/^[A-Za-z0-9_]{4,32}$/.test(tg)){ err.textContent = "Telegram username noto'g'ri. Masalan: @aziza01"; form.tg.focus(); return; }
+    err.textContent = "";
+    var btn = form.querySelector("button[type=submit]");
+    btn.disabled = true; btn.textContent = "Yuborilmoqda…";
+    send({ ism: ism, tel: tel, tg: tg, kurs: form.kurs.value }).then(function(){
+      form.reset(); form.hidden = true; done.hidden = false;
+    }, function(ex){
+      err.textContent = ex && ex.message && ex.message !== "Failed to fetch" && !/^HTTP/.test(ex.message)
+        ? ex.message : "Yuborilmadi. Internetni tekshirib, qayta urinib ko'ring.";
+    }).then(function(){ btn.disabled = false; btn.textContent = "Yuborish"; });
+  });
+
+  // Telegram manzili (@ belgisisiz). Bo'sh bo'lsa, «Telegramdan yozing» havolasi ko'rinmaydi.
+  var TELEGRAM = "";
+  if (TELEGRAM) document.querySelectorAll("[data-tg]").forEach(function(a){
+    a.href = "https://t.me/" + TELEGRAM + "?text=" + encodeURIComponent("Assalomu alaykum, kursga yozilmoqchiman");
+    a.hidden = false;
+  });
+
+  // Bepul video dars. Havola qo'yilmaguncha tugma «tez orada» deb turadi (YouTube yoki Telegram havolasi).
+  var VIDEO = "";
+  document.querySelectorAll("[data-video]").forEach(function(a){
+    if (VIDEO){ a.href = VIDEO; a.target = "_blank"; a.rel = "noopener"; var s = a.querySelector(".tez"); if (s) s.remove(); }
+    else a.addEventListener("click", function(e){ e.preventDefault(); alert("Bepul video dars tez orada joylanadi."); });
+  });
+
+  if (location.hash === "#ariza") open();
+})();
+</script>
+
+</body>
+</html>
