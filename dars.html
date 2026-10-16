@@ -39,12 +39,16 @@ body{display:flex;flex-direction:column;background:#2B1D10}
   var $ = function(id){ return document.getElementById(id); };
   var token = TB.token();
   if (!token){ location.replace("kirish.html"); return; }
-  var g = new URLSearchParams(location.search).get("g");
+  var g = new URLSearchParams(location.search).get("g"), karvon = new URLSearchParams(location.search).get("karvon");
   function xato(h, p){ $("xabar").innerHTML = "<h2>" + h + "</h2><p>" + p + "</p>"; $("xabar").hidden = false; }
 
-  TB.rpc("dars_xona", { p_token: token, p_guruh: g ? +g : null }).then(function(d){
+  // ?karvon=1 — Karvon poygasining kutish xonasi (ustoz moderator bo'lib kiradi)
+  var olish = karvon ? TB.rpc("karvon_ustoz", { p_token: token }).then(function(k){
+    return k && k.xona ? { app: k.app, xona: k.xona, guruh: "🐪 Karvon kutish xonasi", ism: k.ism, ustoz: true, jwt: k.jwt, karvon: true } : null;
+  }) : TB.rpc("dars_xona", { p_token: token, p_guruh: g ? +g : null });
+  olish.then(function(d){
     if (!d || d.xato){ return xato("Guruh topilmadi", "Siz hali guruhga qo'shilmagansiz. Administrator bilan bog'laning."); }
-    var orqa = d.ustoz ? "ustoz.html" : "kabinet.html";
+    var orqa = d.karvon ? "ustoz.html#karvon" : d.ustoz ? "ustoz.html" : "kabinet.html";
     $("orqa").href = orqa;
     $("d-guruh").textContent = d.guruh + " · jonli dars";
     $("d-kim").textContent = d.ism + (d.ustoz ? " · ustoz" : "");

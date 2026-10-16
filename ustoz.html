@@ -120,6 +120,7 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
 .chip.kutilmoqda{background:var(--sand);color:var(--soft)}
 .chip.yoq{background:transparent;color:var(--soft)}
 .chip.toxt{background:#E8D6B4;color:var(--soft)}
+section[data-s="karvon"] .card + .card{margin-top:16px}
 .qarz-txt{color:#B3261E;font-weight:900;font-size:13px}
 .tinfo{background:var(--sand);border-radius:14px;padding:12px 14px;margin-top:10px;font-weight:700;font-size:14px;display:grid;gap:4px}
 .hist h4{margin:16px 0 6px;font-weight:900}
@@ -187,6 +188,7 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
       <a href="#xodimlar" data-b="xodimlar"><i>🧑‍💼</i><span>Xodimlar</span></a>
       <a href="#tolovlar" data-b="tolovlar"><i>💳</i><span>To'lovlar</span></a>
       <a href="#platforma" data-b="platforma"><i>📱</i><span>Platforma</span></a>
+      <a href="#karvon" data-b="karvon"><i>🐪</i><span>Karvon</span></a>
       <a href="#davomat" data-b="davomat"><i>✅</i><span>Davomat</span></a>
       <a href="#" class="soon"><i>📝</i><span>Vazifalar</span></a>
     </div>
@@ -286,6 +288,21 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
         <div class="head"><h3>💳 O'quvchilar</h3>
           <div class="sp seg" id="t-filtr"><button class="on" data-f="">Hammasi</button><button data-f="qarz">Qarzdorlar</button><button data-f="tolangan">To'laganlar</button></div></div>
         <div id="tolovlar"><p class="bosh">Yuklanmoqda…</p></div>
+      </div>
+    </section>
+
+    <!-- KARVON -->
+    <section data-s="karvon" hidden>
+      <div class="top"><div><h1>🐪 Karvon poygasi</h1><p>Platformadagi yakshanba 20:00 jamoaviy o'yini</p></div></div>
+      <div class="card" id="kv-holat"><p class="bosh">Yuklanmoqda…</p></div>
+      <div class="card">
+        <div class="head"><h3>🐪 Jamoalar</h3><div class="sp"><button class="btn sm alt" id="kv-jamoa-qosh">➕ Jamoa qo'shish</button></div></div>
+        <div id="kv-jamoalar"></div>
+      </div>
+      <div class="card">
+        <div class="head"><h3>🎟 Ishtirokchilar</h3></div>
+        <p class="bosh" style="margin-top:0">Har bir o'quvchini jamoaga joylang. Joylanmaganlar boshlanishda eng kichik jamoaga o'zi qo'shiladi.</p>
+        <div id="kv-ishtirok"></div>
       </div>
     </section>
 
@@ -462,9 +479,9 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
   };
   var TARIF = { standart: "Standart", pro: "Pro", premium: "Premium" };
   var HOLATLAR = { yangi: "🆕 Yangi", boglanildi: "📞 Bog'lanildi", yozildi: "✅ Yozildi", rad: "✖ Rad etildi" };
-  var BOLIMLAR = { direktor: ["bosh", "arizalar", "guruhlar", "oquvchilar", "davomat", "tolovlar", "platforma", "xodimlar"],
-                   administrator: ["bosh", "arizalar", "guruhlar", "oquvchilar", "davomat", "tolovlar", "platforma"],
-                   hisobchi: ["tolovlar"], ustoz: ["davomat"], yordamchi: ["davomat"] };
+  var BOLIMLAR = { direktor: ["bosh", "arizalar", "guruhlar", "oquvchilar", "davomat", "tolovlar", "platforma", "karvon", "xodimlar"],
+                   administrator: ["bosh", "arizalar", "guruhlar", "oquvchilar", "davomat", "tolovlar", "platforma", "karvon"],
+                   hisobchi: ["tolovlar"], ustoz: ["davomat", "karvon"], yordamchi: ["davomat"] };
 
   var token = TB.token(), men = null, ruxsat = [];
   var D = { arizalar: [], guruhlar: [], oquvchilar: [], xodimlar: [], ustozlar: [] };
@@ -858,6 +875,79 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
     rpc("p_rasm_ochir_admin", { p_id: +id }).then(function(){ toast("Rasm o'chirildi"); return yuklaPlatforma(); }).catch(xato);
   });
 
+  // ---------- karvon poygasi ----------
+  var KV = null, KVT = null;
+  function kvVaqt(sek){ sek = Math.max(0, Math.round(sek)); var h = Math.floor(sek / 3600), m = Math.floor(sek % 3600 / 60), c = sek % 60;
+    return (h ? h + ":" + ("0" + m).slice(-2) : m) + ":" + ("0" + c).slice(-2); }
+  function kvSoat(iso){ var t = new Date(iso); return ("0" + t.getDate()).slice(-2) + "." + ("0" + (t.getMonth() + 1)).slice(-2) + " " + ("0" + t.getHours()).slice(-2) + ":" + ("0" + t.getMinutes()).slice(-2); }
+  function yuklaKarvon(){
+    if (ruxsat.indexOf("karvon") < 0) return Promise.resolve();
+    return rpc("karvon_ustoz").then(function(d){ KV = d; chizKarvon(); });
+  }
+  function chizKarvon(){
+    var d = KV, h = '<div class="head"><h3>' + (d.sinov ? "🧪 Sinov poygasi" : "🐪 Yakshanba poygasi") + ' · ' + kvSoat(d.boshlanish) + '</h3></div>', holat;
+    if (d.holat === "tugadi") holat = "🏁 Poyga tugadi";
+    else if (d.pauza) holat = "⏸ To'xtatilgan — o'quvchilar kutyapti";
+    else if (d.holat === "oyin") holat = "▶️ O'yin ketyapti: " + (d.savol || "–") + " / 45 savol · tugashiga " + kvVaqt((d.jami_sek || 0) - d.sekund);
+    else if (d.sekund < 0) holat = "⏳ Boshlanishiga " + kvVaqt(-d.sekund) + (d.sinov ? "" : (d.sekund < -7200 ? " · ro'yxat yakshanba 18:00 gacha ochiq" : " · ro'yxat yopildi"));
+    else holat = "⏳ Boshlanmoqda…";
+    h += '<p style="font-weight:800;margin:0 0 12px">' + holat + '</p><div style="display:flex;gap:8px;flex-wrap:wrap">';
+    if (d.holat !== "tugadi"){
+      h += '<a class="btn sm" href="dars.html?karvon=1" target="_blank" rel="noopener">🎥 Kutish xonasi</a>';
+      h += d.pauza ? '<button class="btn sm" data-kv="davom">▶️ Davom ettirish</button>' : '<button class="btn sm alt" data-kv="toxtat">⏸ To\'xtatish</button>';
+      if (d.holat === "royxat") h += '<button class="btn sm alt" data-kv="hozir">▶️ Hozir boshlash</button>';
+      if (d.sinov) h += '<button class="btn sm alt" data-kv="bekor">✖ Sinovni bekor qilish</button>';
+    }
+    if (!d.sinov || d.holat === "tugadi") h += '<button class="btn sm alt" data-kv="sinov">🧪 Sinov poygasi ochish</button>';
+    h += '</div>';
+    if (d.natija && d.natija.jamoalar) h += '<div style="margin-top:14px">' + d.natija.jamoalar.map(function(j){
+      return '<div class="row"><span class="ava" style="background:' + esc(j.rang) + ';color:#fff">' + j.orin + '</span><div class="g"><b>' + esc(j.nom) + ' · ' + j.ball + ' ball</b><span>' + esc(j.azolar.join(", ")) + ' · +' + j.xp + ' XP</span></div></div>';
+    }).join("") + '</div>';
+    $("kv-holat").innerHTML = h;
+    var soni = {}; d.ishtirokchilar.forEach(function(p){ soni[p.jamoa] = (soni[p.jamoa] || 0) + 1; });
+    $("kv-jamoa-qosh").hidden = d.holat !== "royxat";
+    $("kv-jamoalar").innerHTML = d.jamoalar.length ? d.jamoalar.map(function(j){
+      return '<div class="row"><span class="ava" style="background:' + esc(j.rang) + ';color:#fff">🐪</span><div class="g"><b>' + esc(j.nom) + '</b><span>' + (soni[j.id] || 0) + ' kishi · ' + j.ball + ' ball</span></div>' +
+        (d.holat === "royxat" ? '<button class="del" style="color:inherit" data-jn="' + j.id + '">✏️ Nomi</button><button class="del" data-jo="' + j.id + '">O\'chirish</button>' : "") + '</div>';
+    }).join("") : '<p class="bosh">Hali jamoa yo\'q. «➕ Jamoa qo\'shish» ni bosing (jamoa tuzilmasa, boshlanishda o\'zi tuziladi).</p>';
+    $("kv-ishtirok").innerHTML = d.ishtirokchilar.length ? d.ishtirokchilar.map(function(p){
+      var tanla = '<select data-ju="' + p.user + '"' + (d.holat === "tugadi" ? " disabled" : "") + ' style="padding:8px 10px;border-radius:12px;border:2px solid var(--line);font:inherit;font-weight:700"><option value="">— joylanmagan —</option>' +
+        d.jamoalar.map(function(j){ return '<option value="' + j.id + '"' + (p.jamoa === j.id ? " selected" : "") + '>' + esc(j.nom) + '</option>'; }).join("") + '</select>';
+      return '<div class="row"><span class="ava">' + esc(p.avatar || "🙂") + '</span><div class="g"><b>' + esc(p.ism) + (p.onlayn ? ' <span class="chip toxt">● onlayn</span>' : "") + '</b><span>Faol kunlar: ' + p.kunlar + '</span></div>' + tanla + '</div>';
+    }).join("") : '<p class="bosh">Hali hech kim «Qatnashaman» ni bosmagan.</p>';
+  }
+  $("kv-holat").addEventListener("click", function(e){
+    var b = e.target.closest("[data-kv]"); if (!b) return;
+    var a = b.getAttribute("data-kv"), ish;
+    if (a === "toxtat") ish = rpc("karvon_pauza", { p_karvon: KV.karvon, p_toxtat: true });
+    if (a === "davom") ish = rpc("karvon_pauza", { p_karvon: KV.karvon, p_toxtat: false });
+    if (a === "hozir"){ if (!confirm("Poyga 15 soniyadan keyin boshlansinmi?")) return; ish = rpc("karvon_hozir", { p_karvon: KV.karvon }); }
+    if (a === "bekor"){ if (!confirm("Sinov poygasi bekor qilinsinmi?")) return; ish = rpc("karvon_sinov_yop", { p_karvon: KV.karvon }); }
+    if (a === "sinov"){
+      var m = prompt("Sinov poygasi necha daqiqadan keyin boshlansin?", "10"); if (m === null) return;
+      ish = rpc("karvon_sinov", { p_daqiqa: Math.max(1, parseInt(m, 10) || 10) }).then(function(r){ if (r.xato === "bor") toast("Faol sinov poygasi allaqachon bor"); else toast("🧪 Sinov poygasi ochildi — o'quvchilar «Qatnashaman» ni bosishi mumkin"); });
+    }
+    b.disabled = true;
+    ish.then(yuklaKarvon).catch(xato).then(function(){ b.disabled = false; });
+  });
+  $("kv-jamoa-qosh").addEventListener("click", function(){
+    var nom = prompt("Jamoa nomi (bo'sh qoldirsangiz, o'zi qo'yiladi):", ""); if (nom === null) return;
+    rpc("karvon_jamoa_qosh", { p_karvon: KV.karvon, p_nom: nom || null }).then(yuklaKarvon).catch(xato);
+  });
+  $("kv-jamoalar").addEventListener("click", function(e){
+    var n = e.target.getAttribute("data-jn"), o = e.target.getAttribute("data-jo");
+    if (n){ var nom = prompt("Yangi nom:", ""); if (nom) rpc("karvon_jamoa_nom", { p_jamoa: +n, p_nom: nom }).then(yuklaKarvon).catch(xato); }
+    if (o && confirm("Jamoa o'chirilsinmi? A'zolari joylanmagan bo'lib qoladi.")) rpc("karvon_jamoa_ochir", { p_jamoa: +o }).then(yuklaKarvon).catch(xato);
+  });
+  $("kv-ishtirok").addEventListener("change", function(e){
+    var u = e.target.getAttribute("data-ju"); if (!u) return;
+    rpc("karvon_joyla", { p_karvon: KV.karvon, p_user: +u, p_jamoa: e.target.value ? +e.target.value : null }).then(function(){ toast("Joylandi"); return yuklaKarvon(); }).catch(xato);
+  });
+  setInterval(function(){
+    var sek = document.querySelector('main section[data-s="karvon"]');
+    if (sek && !sek.hidden && !document.querySelector("#kv-ishtirok select:focus")) yuklaKarvon().catch(function(){});
+  }, 3000);
+
   // ---------- to'lovlar ----------
   var OYLAR = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
   function som(n){ return String(Math.round(n || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " so'm"; }
@@ -1022,6 +1112,7 @@ dialog::backdrop{background:rgba(58,39,22,.55)}
     if (ruxsat.indexOf("tolovlar") >= 0) ishlar.push(yuklaTolov());
     if (ruxsat.indexOf("davomat") >= 0) ishlar.push(yuklaDavGuruh());
     if (ruxsat.indexOf("platforma") >= 0) ishlar.push(yuklaPlatforma());
+    if (ruxsat.indexOf("karvon") >= 0) ishlar.push(yuklaKarvon());
     if (m.rol === "direktor") ishlar.push(yuklaXodimlar());
     else if (ruxsat.indexOf("guruhlar") >= 0) ishlar.push(rpc("ustozlar").then(function(d){ D.ustozlar = d || []; }));
     return Promise.all(ishlar);
