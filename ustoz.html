@@ -889,7 +889,7 @@ section[data-s="karvon"] .card + .card{margin-top:16px}
     if (d.holat === "tugadi") holat = "🏁 Poyga tugadi";
     else if (d.pauza) holat = "⏸ To'xtatilgan — o'quvchilar kutyapti";
     else if (d.holat === "oyin") holat = "▶️ O'yin ketyapti: " + (d.savol || "–") + " / 45 savol · tugashiga " + kvVaqt((d.jami_sek || 0) - d.sekund);
-    else if (d.sekund < 0) holat = "⏳ Boshlanishiga " + kvVaqt(-d.sekund) + (d.sinov ? "" : (d.sekund < -7200 ? " · ro'yxat yakshanba 18:00 gacha ochiq" : " · ro'yxat yopildi"));
+    else if (d.sekund < 0) holat = "⏳ Boshlanishiga " + kvVaqt(-d.sekund) + (d.sinov ? "" : (d.royxat_ochiq ? " · ro'yxat shanba oxirigacha ochiq" : " · ro'yxat yopildi") + (d.chipta_shart ? "" : " · 🎉 chipta shart emas"));
     else holat = "⏳ Boshlanmoqda…";
     h += '<p style="font-weight:800;margin:0 0 12px">' + holat + '</p><div style="display:flex;gap:8px;flex-wrap:wrap">';
     if (d.holat !== "tugadi"){
