@@ -596,7 +596,8 @@ section[data-s="karvon"] .card + .card{margin-top:16px}
       var sel = '<select class="holat ' + x.holat + '" data-id="' + x.id + '">' + Object.keys(HOLATLAR).map(function(k){
         return '<option value="' + k + '"' + (k === x.holat ? " selected" : "") + '>' + HOLATLAR[k] + '</option>';
       }).join("") + '</select>';
-      return '<div class="row"><div class="g"><b>' + esc(x.ism) + ' · ' + esc(x.kurs) + '</b>' +
+      return '<div class="row"><div class="g"><b>' + esc(x.ism) + ' · ' + esc(x.kurs) + (x.daraja ? ' · 🎯 ' + esc(x.daraja) : "") +
+        (x.manba === "platforma" ? ' <span class="chip toxt">📱 platformadan</span>' : "") + '</b>' +
         '<span><a href="tel:' + tel.replace(/[^\d+]/g, "") + '">' + tel + '</a>' + tg + ' · ' + esc(x.vaqt) + '</span></div>' +
         (x.holat === "rad" ? "" : '<button class="lnk" data-oq="' + i + '">➕ O\'quvchi qilish</button>') + sel + '</div>';
     }).join("");
