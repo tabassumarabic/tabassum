@@ -621,7 +621,8 @@ section[data-s="karvon"] .card + .card{margin-top:16px}
       return '<div class="row"><div class="g"><b>' + esc(x.ism) + ' · ' + esc(x.kurs) + (x.daraja ? ' · 🎯 ' + esc(x.daraja) : "") +
         (x.manba === "platforma" ? ' <span class="chip toxt">📱 platformadan</span>' : "") + '</b>' +
         '<span><a href="tel:' + tel.replace(/[^\d+]/g, "") + '">' + tel + '</a>' + tg + ' · ' + esc(x.vaqt) + '</span></div>' +
-        (x.holat === "rad" ? "" : '<button class="lnk" data-oq="' + i + '">➕ O\'quvchi qilish</button>') + sel + '</div>';
+        (x.holat === "rad" ? "" : '<button class="lnk" data-oq="' + i + '">➕ O\'quvchi qilish</button>') + sel +
+        '<button class="del" data-ax="' + i + '" title="Arizani o\'chirish" aria-label="Arizani o\'chirish" style="font-size:18px">✕</button></div>';
     }).join("");
   }
   function yuklaArizalar(){ return rpc("arizalar").then(function(d){ D.arizalar = d || []; drawArizalar(); raqamlar(); }); }
@@ -631,6 +632,13 @@ section[data-s="karvon"] .card + .card{margin-top:16px}
     rpc("ariza_holat", { p_id: +id, p_holat: e.target.value }).then(yuklaArizalar, xato);
   });
   $("arizalar").addEventListener("click", function(e){
+    var x = e.target.getAttribute("data-ax");
+    if (x !== null){
+      var ar = D.arizalar[+x];
+      if (!confirm("«" + ar.ism + "» arizasi o'chirilsinmi? Buni qaytarib bo'lmaydi.")) return;
+      rpc("ariza_ochir", { p_id: ar.id }).then(function(){ toast("Ariza o'chirildi"); return yuklaArizalar(); }).catch(xato);
+      return;
+    }
     var i = e.target.getAttribute("data-oq"); if (i === null) return;
     var a = D.arizalar[+i];
     oquvchiOyna(null, { ism: a.ism, tel: a.tel, ariza_id: a.id, kurs: a.kurs });
